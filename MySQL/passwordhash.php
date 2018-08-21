@@ -70,7 +70,7 @@
         } else {
             foreach ($query2 as $record) {
                 if ($_POST['username'] == $record['username'] && password_verify($_POST['password'], $record['password'])) {
-                    header("Location: http://localhost/Beispielprogramme/correct_passsword.php");
+                    header("Location: http://localhost/MySQL/MySQL/correct_passsword.php");
                 } else {
                     $message = 'Wrong username or password';
                 }

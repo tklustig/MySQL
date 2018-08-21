@@ -5,8 +5,8 @@
         <title>Login check</title>
         <!-- Das neueste kompilierte und minimierte CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <script src="js/jquery-1.7.1.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/jquery.validate.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <?php
     error_reporting(E_ALL ^ E_NOTICE);

@@ -37,7 +37,7 @@ class MySQLClass {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             array_push($result, $row);
         }
-        if (!empty($result))
+        if (!empty($result) && is_array($result))
             return $result;
         else
             return $GiveBackBoolean;

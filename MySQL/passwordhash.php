@@ -124,7 +124,7 @@
                                    name = "password"  id="password" placeholder = "password">
                         </div>
                         <div class="col-md-3">
-                            <button class = "btn btn-info" type = "submit" name = "login" onclick="myFunction()">Submit</button>
+                            <button class = "btn btn-info" type = "submit" name = "login">Submit</button>
                         </div>
                         <div class="col-md-3">
                             <input type="radio" name="typ" value="insert"> Registration<br>

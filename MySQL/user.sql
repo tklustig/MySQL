@@ -19,8 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `user`
+-- Datenbank: `userScript`
 --
+
+CREATE DATABASE IF NOT EXISTS `userScript`;
 
 -- --------------------------------------------------------
 
@@ -39,9 +41,9 @@ CREATE TABLE `benutzer` (
 --
 
 INSERT INTO `benutzer` (`id`, `username`, `password`) VALUES
-(44, 'admin', '$2y$10$zTapKxt1cAOag71pcrIkUeA6CCKNmnSOikFm58xuPrR/8uE08/6te'),
-(45, 'tklustig', '$2y$10$YynqRwhkvVWCzrw6tuXUnu1Q3BAfTrniGqNCiiZj.ALL5vwsjNQtS'),
-(47, 'tklustig.thomas@gmail.com', '$2y$10$mmoIHIaqpZa6L.sXnYi8C.DYFjCYuSZRVtyYJPAa9oBowVYZ/JASu');
+(1, 'admin', '$2y$10$zTapKxt1cAOag71pcrIkUeA6CCKNmnSOikFm58xuPrR/8uE08/6te'),
+(2, 'tklustig', '$2y$10$YynqRwhkvVWCzrw6tuXUnu1Q3BAfTrniGqNCiiZj.ALL5vwsjNQtS'),
+(3, 'tklustig.thomas@gmail.com', '$2y$10$mmoIHIaqpZa6L.sXnYi8C.DYFjCYuSZRVtyYJPAa9oBowVYZ/JASu');
 
 --
 -- Indizes der exportierten Tabellen
@@ -61,9 +63,6 @@ ALTER TABLE `benutzer`
 -- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

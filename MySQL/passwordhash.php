@@ -22,7 +22,7 @@
     }
 
     spl_autoload_register('classAutoloader');
-    $DatabaseObject = new MySQLClass('root', '', 'mysql', 'localhost', 'user');
+    $DatabaseObject = new MySQLClass('root', '', 'mysql', 'localhost', 'userScript');
     $connect = $DatabaseObject->Verbinden();
     if ($connect) {
         print_r("MySQL-Aufbau wurde soeben initialisiert");

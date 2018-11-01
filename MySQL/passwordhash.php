@@ -47,15 +47,22 @@ if ($_POST['typ'] == 'insert' && isset($_POST['login']) && (empty($_POST['userna
     $sql1 = "INSERT INTO benutzer (username,password)
                         VALUES ('" . ($_POST['username']) . "',
 		'" . ($gehashtes_passwort) . "')";
-    $query1 = $DatabaseObject->Abfragen($connect, $sql1);
-    if (is_bool($query1)) {
-        ?>
-        <font size='5' color='#FA5858'><p> Die Eingaben wurden in die Datenbank eingefügt. Die Id des Datensatzes ist <?= $DatabaseObject->lastInsertedPK($connect) ?></p></font>
-        <?php
-    } else {
-        ?>
-        <font size='5' color='#FA5858'><p> Es konnten keine Datensätze eingefügt werden.</p></font>
-        <?php
+    try {
+        //$DatabaseObject->Transaction($connect);
+        $query1 = $DatabaseObject->Abfragen($connect, $sql1);
+        //$DatabaseObject->Commit($connect);
+        if (is_bool($query1)) {
+            ?>
+            <font size='5' color='#FA5858'><p> Die Eingaben wurden in die Datenbank eingefügt. Die Id des Datensatzes ist <?= $DatabaseObject->lastInsertedPK($connect) ?></p></font>
+            <?php
+        } else {
+            ?>
+            <font size='5' color='#FA5858'><p> Es konnten keine Datensätze eingefügt werden.</p></font>
+            <?php
+        }
+    } catch (Exception $e) {
+        $DatabaseObject->Rollback($connect);
+        print_r($e->getMessage());
     }
 }
 //Submittbutton gedrückt und Login
@@ -82,23 +89,30 @@ if ($_POST['typ'] == 'login' && isset($_POST['login']) && (empty($_POST['usernam
 if ($_POST['typ'] == 'delete') {
     $sql4 = 'SELECT MAX(id) FROM benutzer';
     $query4 = $DatabaseObject->Abfragen($connect, $sql4);
-    if (is_array($query4)) {
-        foreach ($query4 as $record) {
-            $Id2Delete = $record['MAX(id)'];
-        }
-        if ($Id2Delete != null) {
-            $sql5 = "DELETE FROM benutzer WHERE id=$Id2Delete";
-            $query5 = $DatabaseObject->Abfragen($connect, $sql5);
-            if ($query5) {
+    try {
+        if (is_array($query4)) {
+            foreach ($query4 as $record) {
+                $Id2Delete = $record['MAX(id)'];
+            }
+            $DatabaseObject->Transaction($connect);
+            if ($Id2Delete != null) {
+                $sql5 = "DELETE FROM benutzer WHERE id=$Id2Delete";
+                $query5 = $DatabaseObject->Abfragen($connect, $sql5);
+                $DatabaseObject->Commit($connect);
+                if ($query5) {
+                    ?>
+                    <font size='5' color='#FA5858'><p> Der Benutzer mit der Id  <?= $Id2Delete ?> wurde soeben entfernt.</p></font>
+                    <?php
+                }
+            } else {
                 ?>
-                <font size='5' color='#FA5858'><p> Der Benutzer mit der Id  <?= $Id2Delete ?> wurde soeben entfernt.</p></font>
+                <font size='5' color='#FA5858'><p> Da keine Benutzer vorhanden sind, können auch keine gelöscht werden.</p></font>
                 <?php
             }
-        } else {
-            ?>
-            <font size='5' color='#FA5858'><p> Da keine Benutzer vorhanden sind, können auch keine gelöscht werden.</p></font>
-            <?php
         }
+    } catch (Exception $e) {
+        $DatabaseObject->Rollback($connect);
+        print_r($e->getMessage());
     }
 }
 ?>

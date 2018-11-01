@@ -30,8 +30,8 @@ class MySQLClass {
         }
     }
 
-    public function Abfragen($ConnectObject, $sql) {
-        $stmt = $ConnectObject->prepare($sql);
+    public function Abfragen($connection, $sql) {
+        $stmt = $connection->prepare($sql);
         $GiveBackBoolean = $stmt->execute();
         $result = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -43,8 +43,33 @@ class MySQLClass {
             return $GiveBackBoolean;
     }
 
-    public function lastInsertedPK($ConnectObject) {
-        return $ConnectObject->lastInsertId();
+    public function lastInsertedPK($connection) {
+        /* Im Zusammenhang mit Transaktionen funktioniert diese Methode nicht (lt. der PHP Manuals:http://de2.php.net/manual/en/pdo.lastinsertid.php */
+        return $connection->lastInsertId();
+    }
+
+    public function Transaction($connection) {
+        return $connection->beginTransaction();
+    }
+
+    public function Commit($connection) {
+        try {
+            $connection->commit();
+            return true;
+        } catch (Exception $e) {
+            print_r($e->getMessage());
+            return false;
+        }
+    }
+
+    public function Rollback($connection) {
+        try {
+            $connection->rollback();
+            return true;
+        } catch (Exception $e) {
+            print_r($e->getMessage());
+            return false;
+        }
     }
 
 }

@@ -8,7 +8,22 @@
     <!-- Online JQuery Bibliotheken. Werden zwar nicht benötigt, können aber auch nicht schaden... -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/datetime.js" type="text/javascript" charset="utf-8"></script>
 </head>
+<style>
+    .mainDiv {
+        height: 20px;
+        width: 150px;
+        position: relative;
+        background: #F2F5A9;
+        float:right;
+    }
+    .borderLeft {
+        position: relative;
+        top: 10%;
+        bottom: 0;
+    }
+</style>
 <?php
 error_reporting(E_ALL ^ E_NOTICE);
 
@@ -25,28 +40,28 @@ function classAutoloader($class) {
 spl_autoload_register('classAutoloader');
 $DatabaseObject = new MySQLClass('root', '', 'mysql', 'localhost', 'userScript');
 $connect = $DatabaseObject->Verbinden();
-if ($connect) {
-    print_r("MySQL-Aufbau wurde soeben initialisiert");
-} else {
-    print_r("MySQL-Aufbau ist gescheitert");
+if ($connect)
+    print_r("MySQL-Aufbau wurde soeben initialisiert.");
+else {
+    print_r("MySQL-Aufbau ist gescheitert!");
     die();
 }
 ?>
 <?php
 //Submittbutton gedrückt und kein Radiobutton gewählt?
 $message = '';
-if ($_POST['typ'] == null) {
+if ($_REQUEST['typ'] == null) {
     $message = 'Please, choose an option about radion buttons';
 }
 //Submittbutton gedrückt und Registration
-if ($_POST['typ'] == 'insert' && isset($_POST['login']) && (empty($_POST['username']) || empty($_POST['password']))) {
+if ($_REQUEST['typ'] == 'insert' && isset($_REQUEST['login']) && (empty($_REQUEST['username']) || empty($_REQUEST['password']))) {
     $message = 'Please, fill in all data to get registrated';
-} else if ($_POST['typ'] == 'insert' && isset($_POST['login']) && (!empty($_POST['username']) && !empty($_POST['password']))) {
-    $password = $_POST['password'];
-    $gehashtes_passwort = password_hash($password, PASSWORD_DEFAULT);
+} else if ($_REQUEST['typ'] == 'insert' && isset($_REQUEST['login']) && (!empty($_REQUEST['username']) && !empty($_REQUEST['password']))) {
+    $password = $_REQUEST['password'];
+    $gehashtesPasswort = password_hash($password, PASSWORD_DEFAULT);
     $sql1 = "INSERT INTO benutzer (username,password)
-                        VALUES ('" . ($_POST['username']) . "',
-		'" . ($gehashtes_passwort) . "')";
+                        VALUES ('" . ($_REQUEST['username']) . "',
+		'" . ($gehashtesPasswort) . "')";
     try {
         //$DatabaseObject->Transaction($connect);
         $query1 = $DatabaseObject->Abfragen($connect, $sql1);
@@ -66,9 +81,9 @@ if ($_POST['typ'] == 'insert' && isset($_POST['login']) && (empty($_POST['userna
     }
 }
 //Submittbutton gedrückt und Login
-if ($_POST['typ'] == 'login' && isset($_POST['login']) && (empty($_POST['username']) || empty($_POST['password']))) {
+if ($_REQUEST['typ'] == 'login' && isset($_REQUEST['login']) && (empty($_REQUEST['username']) || empty($_REQUEST['password']))) {
     $message = 'Please, fill in all data to get entered';
-} else if ($_POST['typ'] == 'login' && isset($_POST['login']) && (!empty($_POST['username']) && !empty($_POST['password']))) {
+} else if ($_REQUEST['typ'] == 'login' && isset($_REQUEST['login']) && (!empty($_REQUEST['username']) && !empty($_REQUEST['password']))) {
     $sql2 = 'SELECT username,password FROM benutzer';
     $query2 = $DatabaseObject->Abfragen($connect, $sql2);
     if ($query2 && !is_array($query2)) {
@@ -77,8 +92,8 @@ if ($_POST['typ'] == 'login' && isset($_POST['login']) && (empty($_POST['usernam
         <?php
     } else {
         foreach ($query2 as $record) {
-            if ($_POST['username'] == $record['username'] && password_verify($_POST['password'], $record['password'])) {
-                header("Location: http://localhost/MySQL/MySQL/correct_passsword.php");
+            if ($_REQUEST['username'] == $record['username'] && password_verify($_REQUEST['password'], $record['password'])) {
+                header("Location: http://localhost:8080/MySQL/MySQL/correct_passsword.php");
             } else {
                 $message = 'Wrong username or password';
             }
@@ -86,7 +101,7 @@ if ($_POST['typ'] == 'login' && isset($_POST['login']) && (empty($_POST['usernam
     }
 }
 //Submittbutton gedrückt und letzten Benutzer löschen
-if ($_POST['typ'] == 'delete') {
+if ($_REQUEST['typ'] == 'delete') {
     $sql4 = 'SELECT MAX(id) FROM benutzer';
     $query4 = $DatabaseObject->Abfragen($connect, $sql4);
     try {
@@ -117,6 +132,9 @@ if ($_POST['typ'] == 'delete') {
 }
 ?>
 <body>
+    <div class="mainDiv">
+        <div id="uhr" class="borderLeft"></div>
+    </div>
 <center>
     <div class="page-header">
         <h3>Login bzw. Registrationsscript <small>in Verbindung mit PHP baut diese WebSite eine Verbindung zu einer Datenbank auf und überprüft ggf.Ihre Eingaben</small></h3>
@@ -132,7 +150,7 @@ if ($_POST['typ'] == 'delete') {
                     </div>
                     <h3 class="alert alert-success">Enter Username and Password</h3>
                     <div class="col-md-3">
-                        <input type = "text" name = "username" placeholder = "username" autofocus>
+                        <input type = "text" name = "username" placeholder = "username" value="<?php if (!empty($_REQUEST['username'])) echo $_REQUEST['username']; ?>" autofocus>
                     </div>
                     <div class="col-md-3">
                         <input type = "password" class = "form-control"
@@ -145,14 +163,14 @@ if ($_POST['typ'] == 'delete') {
                         <input type="radio" name="typ" value="insert"> Registration<br>
                         <input type="radio" name="typ" value="login"> Login<br>
                         <input type="radio" name="typ" value="show"> Benutzer anzeigen<br>
-                        <input  type="radio" name="typ" value="delete">letzten Benutzer löschen<br>
+                        <input  type="radio" name="typ" value="delete"> letzten Benutzer löschen<br>
                     </div>
                 </div>
             </form>
             <div class="col-md-12">
                 <?php
 // Submittbutton gedrückt und Benutzer anzeigen
-                if ($_POST['typ'] == 'show') {
+                if ($_REQUEST['typ'] == 'show') {
                     ?>
                     <p>Folgende Benutzer sind in der Datenbank vorhanden:</p>
                     <?php

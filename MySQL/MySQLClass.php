@@ -31,10 +31,10 @@ class MySQLClass {
     }
 
     public function Abfragen($connection, $sql) {
-        $stmt = $connection->prepare($sql);
-        $GiveBackBoolean = $stmt->execute();
+        $pConn = $connection->prepare($sql);
+        $GiveBackBoolean = $pConn->execute();
         $result = array();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $pConn->fetch(PDO::FETCH_ASSOC)) {
             array_push($result, $row);
         }
         if (!empty($result) && is_array($result))

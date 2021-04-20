@@ -93,7 +93,7 @@ if ($_REQUEST['typ'] == 'login' && isset($_REQUEST['login']) && (empty($_REQUEST
     } else {
         foreach ($query2 as $record) {
             if ($_REQUEST['username'] == $record['username'] && password_verify($_REQUEST['password'], $record['password'])) {
-                header("Location: http://localhost:8080/MySQL/MySQL/correct_passsword.php");
+                header("Location: http://localhost/MySQL/MySQL/correct_passsword.php");
             } else {
                 $message = 'Wrong username or password';
             }

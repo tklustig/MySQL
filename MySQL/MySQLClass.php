@@ -25,22 +25,27 @@ class MySQLClass {
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $connection;
         } catch (PDOException $e) {
-            print_r("Error!: " . $e->getMessage() . "<br>");
+            print_r("Error!: " . $e->getMessage() . "<br>at line " . $e->getLine() . "<br>in file " . $e->getFile());
             die();
         }
     }
 
     public function Abfragen($connection, $sql) {
-        $pConn = $connection->prepare($sql);
-        $GiveBackBoolean = $pConn->execute();
-        $result = array();
-        while ($row = $pConn->fetch(PDO::FETCH_ASSOC)) {
-            array_push($result, $row);
+        try {
+            $pConn = $connection->prepare($sql);
+            $GiveBackBoolean = $pConn->execute();
+            $result = array();
+            while ($row = $pConn->fetch(PDO::FETCH_ASSOC)) {
+                array_push($result, $row);
+            }
+            if (!empty($result) && is_array($result))
+                return $result;
+            else
+                return $GiveBackBoolean;
+        } catch (Exception $e) {
+            print_r("Error!: " . $e->getMessage() . "<br>at line " . $e->getLine() . "<br>in file " . $e->getFile());
+            return false;
         }
-        if (!empty($result) && is_array($result))
-            return $result;
-        else
-            return $GiveBackBoolean;
     }
 
     public function lastInsertedPK($connection) {
@@ -57,7 +62,7 @@ class MySQLClass {
             $connection->commit();
             return true;
         } catch (Exception $e) {
-            print_r($e->getMessage());
+            print_r("Error!: " . $e->getMessage() . "<br>at line " . $e->getLine() . "<br>in file " . $e->getFile());
             return false;
         }
     }
@@ -67,7 +72,7 @@ class MySQLClass {
             $connection->rollback();
             return true;
         } catch (Exception $e) {
-            print_r($e->getMessage());
+            print_r("Error!: " . $e->getMessage() . "<br>at line " . $e->getLine() . "<br>in file " . $e->getFile());
             return false;
         }
     }

@@ -63,7 +63,6 @@ if ($_REQUEST['typ'] == 'insert' && isset($_REQUEST['login']) && (empty($_REQUES
                         VALUES ('" . ($_REQUEST['username']) . "',
 		'" . ($gehashtesPasswort) . "')";
     try {
-        //$DatabaseObject->Transaction($connect);
         $query1 = $DatabaseObject->Abfragen($connect, $sql1);
         //$DatabaseObject->Commit($connect);
         if (is_bool($query1)) {
@@ -76,8 +75,7 @@ if ($_REQUEST['typ'] == 'insert' && isset($_REQUEST['login']) && (empty($_REQUES
             <?php
         }
     } catch (Exception $e) {
-        $DatabaseObject->Rollback($connect);
-        print_r($e->getMessage());
+        print_r($e->getMessage() . 'in file ' . $e->getFile() . 'at line ' . $e->getLine());
     }
 }
 //Submittbutton gedrückt und Login
@@ -127,7 +125,7 @@ if ($_REQUEST['typ'] == 'delete') {
         }
     } catch (Exception $e) {
         $DatabaseObject->Rollback($connect);
-        print_r($e->getMessage());
+        print_r($e->getMessage() . 'in file ' . $e->getFile() . 'at line ' . $e->getLine());
     }
 }
 ?>
